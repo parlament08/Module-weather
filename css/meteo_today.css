@@ -1,0 +1,130 @@
+.section-widget-one, .section-widget-two{
+    width: 350px;
+    float: left;
+    margin-right: 5px;
+}
+.container-widget-chisinau .container-top{
+    border: 1px solid #FEB62B;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #FEB62B;
+}
+.section-left, .section-center, .section-right{
+    float: left;
+}
+.city-name{
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px;
+    width: 180px;
+}
+
+.temperature{
+    font-size: 25px;
+    padding: 2px 8px 0 10px;
+}
+.data-source{
+    float: left;
+}
+.current-date{
+    float: right;
+}
+
+.table-col{
+    width: 92px;
+    border: 1px solid grey;
+    float: left;
+    padding: 3px 3px 3px 12px;
+    height: 150px;
+}
+.date{
+    padding: 5px 0 5px 0;
+}
+.datePicker-wrapper{
+    width: 100%
+}
+
+.current-date{
+    color: #DB9509;
+    font-weight: bold;
+
+}
+a{
+    text-decoration: underline;
+}
+a:hover{
+    text-decoration: none;
+}
+
+body{
+    padding: 15px;
+}
+
+.container-widget-location .container-top-location{
+    border: 1px solid #7DFFA2;
+    height: 45px;
+    border-radius: 4px;
+    background-color: #7DFFA2;
+
+}
+.section-left-location, .section-center-location, .section-right-location{
+    float: left;
+}
+.city-name-location{
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    width: 180px;
+}
+
+.temperature-location{
+    font-size: 32px;
+    padding:4px 0 0 10px;
+}
+.current-date-location{
+    float: right;
+    color: #23A000;
+    font-weight: bold;
+}
+.ct-chart {
+    margin-top: 200px;
+}
+.datePicker-wrapper{
+    display: inline-flex;
+    margin-bottom: 20px;
+}
+.datePicker-wrapper input {
+    height: 20px;
+    margin-right: 15px;
+}
+.datePicker-wrapper label {
+    margin-right: 5px;
+}
+.datePicker-wrapper input.btn{
+    height: 30px;
+    line-height: 1;
+    width: 70px;
+    text-transform: uppercase;
+}
+
+.icon-weather img, .icon-weather-location img {
+    width: 40px;
+    height: auto;
+}
+
+.container-period{
+    color: #304E7C;
+    font-size: 24px;
+}
+
+.container-period .title, .container-period .last-week{
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 30px;
+}
+.container-period .last-week{
+    font-weight: bold;
+    color: #FEB62B ;
+    font-size: 20px;
+}
+

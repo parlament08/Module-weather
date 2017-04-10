@@ -1,0 +1,14 @@
+name = Meteo Today
+description = This module provides  with dynamic content about weather.
+package = My Modules
+core = 7.x
+
+
+stylesheets[all][] = js/chartist/dist/chartist.min.css
+stylesheets[all][] = css/meteo_today.css
+
+
+
+scripts[] = js/chartist/dist/chartist.min.js
+scripts[] = js/libs/moment.js
+scripts[] = js/meteo_today.js

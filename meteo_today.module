@@ -1,0 +1,129 @@
+<?php
+/**
+ * Declare what blocks are provided by this module.
+ * Implements hook_block_info().
+ */
+function meteo_today_block_info()
+{
+    $block['my_widget'] = array(
+        'info' => t('My Widget Weather'),
+        'cache' => DRUPAL_NO_CACHE,
+    );
+    return $block;
+}
+/**
+ * Define what our block is going to look like.
+ * Implements hook_block_view().
+ */
+function meteo_today_block_view($block_key)
+{
+    $block = array();
+    if ($block_key == 'my_widget') {
+        $block['subject'] = t('Custom Widget Weather');
+        $block['content'] = meteo_today_weather_data();
+    }
+    return $block;
+}
+//============ Weather forecast for Chisinau ===========//
+function meteo_today_weather_data()
+{
+    $key = "07c2af2d54a0478c9ad72529172703";
+    $city = 'chisinau';
+    $url = "http://api.worldweatheronline.com/premium/v1/weather.ashx?key=$key&q=$city&format=json&fx=no";
+    if (!$data = file_get_contents($url)) {
+        return FALSE;
+    }
+    $taskList = json_decode($data);
+    $city = $taskList->data->request[0]->query;
+    $temp = $taskList->data->current_condition[0]->temp_C;
+    $iconUrl = $taskList->data->current_condition[0]->weatherIconUrl[0]->value;
+    return theme('chisinau_temp', array('city' => $city, 'temp' => $temp, 'iconUrl' => $iconUrl));
+}
+function meteo_today_theme()
+{
+    return array(
+        'chisinau_temp' => array(
+            'variables' => array( // переменные которые будут доступны в шаблоне
+                'city' => NULL,
+                'temp' => NULL,
+                'iconUrl' => NULL
+            ),
+// имя шаблона, в данном случае custom_template.tpl.php в корне модуля
+            'template' => 'meteo_today_widget',
+        ),
+        'statistics_page' => array(
+            'variables' => array(
+                'statisticsArr' => NULL,
+                'startDate' => NULL,
+                'endDate' => NULL
+            ),
+            'template' => 'meteo_today_statistics'
+        )
+    );
+}
+/**
+ * Implements hook_menu().
+ */
+function meteo_today_menu()
+{
+    $items['statistics'] = array(
+        'title' => '',
+        'page callback' => 'meteo_today_statistics_weather',
+        'access callback' => TRUE,
+        'options' => array('attributes' => array('class' => array('test-class'))),
+    );
+    $items['ajax/period'] = array(
+        'title' => t('foo AJAX'),
+        'type' => MENU_CALLBACK,
+        'page callback' => 'ajax_period',
+        'access arguments' => array('access content'),
+    );
+
+    return $items;
+}
+function ajax_period(){
+
+}
+function meteo_today_statistics_weather()
+{
+    drupal_add_library('system', 'ui.datepicker');
+    $key = "07c2af2d54a0478c9ad72529172703";
+    $city = 'chisinau';
+    $datePeriod = new DateTime('-1 days');
+    $endDate = $datePeriod->format('Y-m-d');
+    $datePeriod = new DateTime('-7 days');
+    $date = $datePeriod->format('Y-m-d');
+    if (isset($_GET['dateStart']) && isset($_GET['dateEnd']) && !empty($_GET['dateStart']) && !empty($_GET['dateEnd'])) {
+        $endDate = $_GET['dateEnd'];
+        $date = $_GET['dateStart'];
+
+    }
+    $urlStatistic = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx?key=$key&q=$city&format=json&date=$date&enddate=$endDate";
+    if (!$dataStatistic = file_get_contents($urlStatistic)) {
+        return false;
+    }
+    $taskListStatistic = json_decode($dataStatistic);
+    $listDays = $taskListStatistic->data->weather;
+    $listDataDay = [];
+    foreach ($listDays as $day) {
+        $listDataDay[] = array(
+            'dateDay' => $day->date,
+            'maxTemp' => $day->maxtempC,
+            'minTemp' => $day->mintempC,
+            'iconUrlDay' => $day->hourly[5]->weatherIconUrl[0]->value
+        );
+    };
+    drupal_add_js(array('meteo_today' => array('dataStats' => $listDataDay)), array('type' => 'setting'));
+    $dateFormat = new DateTime('-1 days');
+    $endDate = $dateFormat->format('d M, Y');
+    $dateFormat = new DateTime('-7 days');
+    $date = $dateFormat->format('d M, Y');
+    return theme('statistics_page', array('statisticsArr' => $listDataDay, 'startDate' => $date, 'endDate' => $endDate));
+}
+
+
+
+
+
+
+
