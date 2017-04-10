@@ -24,7 +24,6 @@
                 var currentDateEnd = $("#to").datepicker("getDate");
                 formatDateEnd = moment(currentDateEnd).format('YYYY/MM/DD');
             });
-
             function getDate(element, dateFormat) {
                 var date;
                 try {
@@ -35,7 +34,7 @@
                 return date;
             }
 
-//=================== Отрисовка графика статистики =================//
+//=================== Render Chartist.js =================//
             var response = settings.meteo_today;
             var dayWeek = [];
             var minTemperature = [];
@@ -48,7 +47,6 @@
                 minTemperature.push(min);
                 maxTemperature.push(max);
             });
-
             var data = {
                 labels: dayWeek,
                 series: [
@@ -61,37 +59,7 @@
                 height: 200
             };
             new Chartist.Line('.ct-chart', data, options);
-
-
-            //============================
-
-            getStatsData(null, null);
-
-            $('.btn').click(function () {
-                getStatsData(formatDateStart, formatDateEnd)
-            });
-            function getStatsData(formatDateStart, formatDateEnd) {
-                $.get('/statistics/ajax' + formatDateEnd, null, function (response) {
-                    console.log(response.data);
-                });
-
-                //$.ajax({
-                //    type: 'GET',
-                //    url: '/statistics/ajax',
-                //    dataType: 'json',
-                //    data: {
-                //        dateStart: formatDateStart,
-                //        dateEnd: formatDateEnd
-                //    },
-                //    success: function (response) {
-                //        console.log(response);
-                //    }
-                //});
-
-
-            }
         }
-
     }
 }(jQuery));
 

@@ -39,16 +39,18 @@ function meteo_today_weather_data()
     $iconUrl = $taskList->data->current_condition[0]->weatherIconUrl[0]->value;
     return theme('chisinau_temp', array('city' => $city, 'temp' => $temp, 'iconUrl' => $iconUrl));
 }
+/**
+ * Implements hook_theme().
+ */
 function meteo_today_theme()
 {
     return array(
         'chisinau_temp' => array(
-            'variables' => array( // переменные которые будут доступны в шаблоне
+            'variables' => array(
                 'city' => NULL,
                 'temp' => NULL,
                 'iconUrl' => NULL
             ),
-// имя шаблона, в данном случае custom_template.tpl.php в корне модуля
             'template' => 'meteo_today_widget',
         ),
         'statistics_page' => array(
