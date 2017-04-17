@@ -3,6 +3,14 @@
     float: left;
     margin-right: 5px;
 }
+.container-widget-chisinau{
+    float: left;
+    margin-right: 10px;
+}
+.container-bottom{
+    margin-left: 510px;
+}
+
 .container-widget-chisinau .container-top{
     border: 1px solid #FEB62B;
     height: 40px;

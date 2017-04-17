@@ -28,6 +28,53 @@ function meteo_today_block_view($block_key)
 function meteo_today_weather_data()
 {
     $key = "07c2af2d54a0478c9ad72529172703";
+    //$ip = $_SERVER['REMOTE_ADDR']; //127.0.0.1
+
+    //=========== ip for Chisinau =======//
+    $ip = '95.65.56.153';
+    $details = json_decode(file_get_contents("http://freegeoip.net/json/{$ip}"));
+
+    //========= custom coordinates =========//
+
+    //======== Geneve =========//
+    //$lat = '46.204391';
+    //$lon = '6.143158';
+
+    //========= København ==========//
+    //$lat = '55.676097';
+    //$lon = '12.568337';
+
+    //========= Miami ==========//
+    //$lat = '25.761680';
+    //$lon = '-80.191790';
+
+    //======= Custom =======//
+    $lat = '41.385064';
+    $lon = '2.173403';
+
+    //========= coordinates by location ===========//
+    //$lat = $details->latitude;
+    //$lon = $details->longitude;
+
+
+    //========== get name City by coordinats ============//
+    $urlCityName = "https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lon&key=AIzaSyBRFq4rBAD6EfGhMLLNxSrqSWGJ3MW7gIk";
+    if(!$nameCity = file_get_contents($urlCityName)){
+        return FALSE;
+    }
+    $dataCurrentCity = json_decode(($nameCity));
+    $cityLocation = $dataCurrentCity->results[0]->address_components[3]->long_name;
+
+    $url = "http://api.worldweatheronline.com/premium/v1/weather.ashx?key=$key&q=$lat,$lon&format=json&fx=no";
+    if (!$data = file_get_contents($url)) {
+        return FALSE;
+    }
+    $taskList = json_decode($data);
+    $city = $cityLocation;
+    $temp = $taskList->data->current_condition[0]->temp_C;
+    $iconUrl = $taskList->data->current_condition[0]->weatherIconUrl[0]->value;
+    $output = theme('chisinau_temp', array('city' => $city, 'temp' => $temp, 'iconUrl' => $iconUrl));
+
     $city = 'chisinau';
     $url = "http://api.worldweatheronline.com/premium/v1/weather.ashx?key=$key&q=$city&format=json&fx=no";
     if (!$data = file_get_contents($url)) {
@@ -37,7 +84,18 @@ function meteo_today_weather_data()
     $city = $taskList->data->request[0]->query;
     $temp = $taskList->data->current_condition[0]->temp_C;
     $iconUrl = $taskList->data->current_condition[0]->weatherIconUrl[0]->value;
-    return theme('chisinau_temp', array('city' => $city, 'temp' => $temp, 'iconUrl' => $iconUrl));
+    $link_statistic = <<<END
+    <div class="container-bottom">
+            <div class="data-source">
+                <a href="/statistics">weather last 7 days</a>
+            </div>
+        </div>
+END;
+
+    $output.=theme('chisinau_temp', array('city' => $city, 'temp' => $temp, 'iconUrl' => $iconUrl));
+    $output.=$link_statistic;
+
+    return $output;
 }
 /**
  * Implements hook_theme().
